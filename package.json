@@ -1,0 +1,25 @@
+{
+  "name": "ai-hack",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/msal-node": "^1.17.2",
+    "cheerio": "1.0.0-rc.12",
+    "dotenv": "^16.0.3",
+    "got": "^12.6.0",
+    "gpt-3-encoder": "^1.1.4",
+    "openai": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.1.1",
+    "typescript": "^5.0.4"
+  }
+}
