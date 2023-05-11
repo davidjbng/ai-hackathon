@@ -7,7 +7,6 @@ import { Chunk } from "./types";
 
 Error.stackTraceLimit = 3;
 
-// az account get-access-token --resource https://lise2.sharepoint.com
 const token = process.env.TOKEN;
 if (!token) {
   throw new Error("No token provided");
