@@ -50,8 +50,12 @@ const spClient = got.extend({
 const pageContentType =
   "0x0101009D1CB255DA76424F860D91F20E6C4118006F93D9628153AD4096B45E09F378D2FD00B75336EAAD10DE41B2006584B883265B";
 
-const sitePagesResponse = await spClient(
-  `sites/KnowledgeBase/_api/web/lists/GetByTitle('Site Pages')/items?$select=ContentTypeId,FileRef,CanvasContent1,Title,Modified&$expand=Folder&$filter=ContentTypeId eq '${pageContentType}'`
+const knowledgeBaseResponse = await spClient(
+  `sites/KnowledgeBase/_api/web/lists/GetByTitle('Site Pages')/items?$select=ContentTypeId,FileRef,CanvasContent1,Title,Modified&$expand=Folder&$top=1000&$filter=ContentTypeId eq '${pageContentType}'`
+);
+
+const rootPagesResponse = await spClient(
+  `_api/web/lists/GetByTitle('Site Pages')/items?$select=ContentTypeId,FileRef,CanvasContent1,Title,Modified&$expand=Folder&$top=1000`
 );
 
 type SPPageItem = {
@@ -60,14 +64,22 @@ type SPPageItem = {
   Modified: string;
   Title: string;
 };
-const pages = JSON.parse(sitePagesResponse.body).value as SPPageItem[];
-console.log(`Found ${pages.length} pages`);
 
-const chunkedPages = [...createChunkedPages(pages)];
+const pagesKnowledgeBase = JSON.parse(knowledgeBaseResponse.body)
+  .value as SPPageItem[];
+const pagesRoot = JSON.parse(rootPagesResponse.body).value as SPPageItem[];
+
+const pagesCount = pagesKnowledgeBase.length + pagesRoot.length;
+
+console.log(`Found ${pagesCount} pages`);
+
+const chunkedPages = [
+  ...createChunkedPages([...pagesKnowledgeBase, ...pagesRoot]),
+];
 
 console.log(chunkedPages);
 console.log(
-  `Found ${chunkedPages.length} chunks (max 800 tokens) from ${pages.length} pages`
+  `Found ${chunkedPages.length} chunks (max 800 tokens) from ${pagesCount} pages`
 );
 await writeFile("./data/sp-data.json", JSON.stringify(chunkedPages, null, 2));
 
@@ -76,6 +88,8 @@ function* createChunkedPages(
   maxChunkTokens = 600
 ): Generator<Chunk> {
   for (const page of pages) {
+    if (!page.CanvasContent1) continue;
+
     const parsed = parseContent(page);
     const chunks = splitContent(parsed.content, maxChunkTokens);
 
