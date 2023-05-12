@@ -24,7 +24,7 @@ const openai = new OpenAIApi(
 
 const embeddedChunks: EmbeddedChunk[] = [];
 for (const chunk of chunks as Chunk[]) {
-  await new Promise(r => setTimeout(r, 10))
+  await new Promise((r) => setTimeout(r, 10));
   const result = await openai.createEmbedding({
     model,
     input: chunk.content,

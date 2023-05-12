@@ -6,7 +6,10 @@ function vectorLength(a: number[]): number {
   return Math.sqrt(a.reduce((acc, value) => acc + value * value, 0));
 }
 
-export function cosineSimilarity(embeddingA: number[], embeddingB: number[]): number {
+export function cosineSimilarity(
+  embeddingA: number[],
+  embeddingB: number[]
+): number {
   const dotProductValue = dotProduct(embeddingA, embeddingB);
   const lengthA = vectorLength(embeddingA);
   const lengthB = vectorLength(embeddingB);
