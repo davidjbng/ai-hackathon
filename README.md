@@ -11,9 +11,12 @@
 
 ### Installing Dependencies
 
+Install [Node.js](https://nodejs.org/en) >= 18
+
 ```sh
-npm i -g pnpm
+npm i
 pnpm i
+yarn
 ```
 
 ### Initialize Secrets
