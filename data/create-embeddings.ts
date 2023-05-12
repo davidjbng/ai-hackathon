@@ -1,7 +1,8 @@
 import "dotenv/config";
 import { Configuration, OpenAIApi } from "openai";
-import { readFile, writeFile } from "node:fs/promises";
-import { Chunk, EmbeddedChunk } from "./types";
+import { writeFile } from "node:fs/promises";
+import { EmbeddedChunk } from "./types";
+import cliProgress, { SingleBar } from "cli-progress";
 import chunks from "./sp-data.json";
 
 const apiKey = process.env.API_KEY;
@@ -23,21 +24,25 @@ const openai = new OpenAIApi(
 );
 
 const embeddedChunks: EmbeddedChunk[] = [];
-for (const chunk of chunks as Chunk[]) {
-  await new Promise((r) => setTimeout(r, 10));
+const totalChunks = chunks.length;
+const progressBar = new SingleBar({}, cliProgress.Presets.shades_classic);
+progressBar.start(totalChunks, 0);
+for (const [i, chunk] of chunks.entries()) {
+  await new Promise((r) => setTimeout(r, 20));
   const result = await openai.createEmbedding({
     model,
     input: chunk.content,
   });
 
   const embedding = result.data.data[0].embedding;
-  console.log("Created embedding: ", embedding);
+  progressBar.update(i + 1);
 
   embeddedChunks.push({
     ...chunk,
     embedding,
   });
 }
+progressBar.stop();
 
 console.log("Embedded chunks:", embeddedChunks);
 
