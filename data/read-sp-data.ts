@@ -4,7 +4,6 @@ import { load } from "cheerio";
 import { writeFile } from "node:fs/promises";
 import { encode } from "gpt-3-encoder";
 import { Chunk } from "./types";
-import { resolve } from "node:path";
 
 Error.stackTraceLimit = 3;
 
@@ -70,10 +69,7 @@ console.log(chunkedPages);
 console.log(
   `Found ${chunkedPages.length} chunks (max 800 tokens) from ${pages.length} pages`
 );
-await writeFile(
-  resolve(__dirname, "sp-data.json"),
-  JSON.stringify(chunkedPages, null, 2)
-);
+await writeFile("./data/sp-data.json", JSON.stringify(chunkedPages, null, 2));
 
 function* createChunkedPages(
   pages: SPPageItem[],

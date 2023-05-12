@@ -3,7 +3,6 @@ import { Configuration, OpenAIApi } from "openai";
 import { readFile, writeFile } from "node:fs/promises";
 import { Chunk, EmbeddedChunk } from "./types";
 import chunks from "./sp-data.json";
-import { resolve } from 'node:path';
 
 const apiKey = process.env.API_KEY;
 const model = "text-embedding-ada-002";
@@ -43,6 +42,6 @@ for (const chunk of chunks as Chunk[]) {
 console.log("Embedded chunks:", embeddedChunks);
 
 await writeFile(
-  resolve(__dirname, "embeddings.json"),
+  "./data/embeddings.json",
   JSON.stringify(embeddedChunks, null, 2)
 );
