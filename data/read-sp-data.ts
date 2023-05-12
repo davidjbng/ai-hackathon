@@ -7,7 +7,7 @@ import { Chunk } from "./types";
 
 Error.stackTraceLimit = 3;
 
-const token = process.env.TOKEN;
+const token = process.env.AZ_TOKEN;
 if (!token) {
   throw new Error("No token provided");
 }
